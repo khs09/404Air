@@ -1,0 +1,94 @@
+/* === 화면 정중앙 배치 === */
+:root{
+  --shell-max: 1180px;
+  --aside-w: 280px;
+  --card-w: 860px;
+  --gap: 28px;
+  --brand: #2563eb;
+}
+
+/* 기본(일반: 필터+캘린더 2열) */
+.calendar-shell.with-aside{
+  max-width: var(--shell-max);
+  margin: 28px auto 40px;            /* 화면 중앙 */
+  display: grid;
+  grid-template-columns: var(--aside-w) var(--card-w);
+  gap: var(--gap);
+  align-items: start;
+}
+
+/* 기존 :root/with-aside 부분은 그대로 두고, 아래만 '추가' */
+
+ /* 교대(단일)일 때는 폭을 넓혀서 덜 답답하게 */
+ .calendar-shell.single{
+  /* 화면 정중앙 + 넉넉한 너비 */
+  max-width: 1180px;      
+  margin: 28px auto 40px;
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-content: center;
+}
+
+/* 교대 모드일 땐 카드가 컨테이너 너비를 꽉 채우도록 */
+.calendar-shell.single .calendar-card{
+  width: 100%;
+}
+.right-type { margin-left: auto; }
+
+/* 카드 공통 */
+.card{ background:#fff; border:1px solid #e5e7eb; border-radius:14px;
+  box-shadow:0 8px 24px rgba(0,0,0,.05); overflow:hidden; }
+.card-header{ padding:14px 16px; border-bottom:1px solid #eef1f5; }
+.card-title{ margin:0; font-size:16px; font-weight:800; }
+.card-body{ padding:14px 16px 16px; }
+
+/* 필터 카드 */
+.filter-list{ list-style:none; padding:0; margin:0; }
+.check-row{ display:flex; align-items:center; gap:8px; padding:8px 0; font-size:14px; }
+
+/* 메인 카드(일반/교대 동일 크롬) */
+.calendar-card{ width: var(--card-w); }
+.card-chrome{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 12px; border-bottom:1px solid #eef1f5; background:#fafbfc;
+}
+.left-tabs{ display:flex; align-items:center; gap:8px; }
+.seg{
+  padding:6px 12px; border-radius:10px; border:1px solid #e5e7eb; background:#fff;
+  font-weight:700; cursor:pointer;
+}
+.seg.active{ background:#1f4ae0; color:#fff; border-color:#1f4ae0; }
+.btn-green{ margin-left:8px; padding:6px 12px; border:none; border-radius:10px;
+  background:#22c55e; color:#fff; font-weight:800; cursor:pointer; }
+.pill-toggle{ display:inline-flex; gap:6px; background:#eef2f7; padding:4px; border-radius:999px; }
+.pill{ min-width:48px; padding:6px 12px; border-radius:999px; border:none; background:transparent; font-weight:800; cursor:pointer; }
+.pill.active{ background:var(--brand); color:#fff; }
+
+/* 제목 + 내비(양쪽 동일) */
+.card-subheader{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 12px 6px; border-bottom:1px solid #eef1f5;
+}
+.calendar-title{ margin:0; font-size:22px; font-weight:900; }
+.nav-pack{ display:flex; gap:8px; }
+.square{ min-width:36px; height:32px; padding:0 10px; border:1px solid #cfd6de; background:#fff; border-radius:6px; cursor:pointer; }
+.square:hover{ background:#f5f7fa; }
+
+.calendar-body{ padding:12px 12px 16px; }
+
+/* === FullCalendar(일반) === */
+.fc, .fc .fc-scrollgrid{ width:100% !important; box-sizing:border-box; }
+.fc .fc-scroller{ overflow-x: visible !important; overflow-y: auto !important; }
+.fc .fc-daygrid-day-frame{ padding:0 !important; }       /* 날짜칸 패딩 제거 */
+.fc .fc-col-header-cell-cushion{ padding:8px 4px; font-weight:800; }
+.fc .fc-daygrid-day-number{ padding:2px 4px; font-size:11px; color:#374151; }
+.fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-frame{ background-color:rgba(255,235,59,.15); }
+.fc .fc-event{ border:none; border-radius:6px; padding:1px 6px; font-size:11px; line-height:1.2; }
+
+/* 반응형: 좁아지면 1열 */
+@media (max-width: 1180px){
+  .calendar-shell.with-aside{
+    grid-template-columns: 1fr;
+  }
+  .calendar-card{ width: 100%; }
+}

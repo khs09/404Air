@@ -1,0 +1,54 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:8.1
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: 404notfound
+      MYSQL_USER: 404notfound
+      MYSQL_PASSWORD: 1234
+      TZ: Asia/Seoul
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p1234"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./404NotFound
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/404notfound?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: 404notfound
+      SPRING_DATASOURCE_PASSWORD: 1234
+      APP_UPLOAD_DIR: /app/uploads
+      TZ: Asia/Seoul
+      # 🔑 reCAPTCHA Secret Key 추가
+      RECAPTCHA_SECRET: "6Lf8ZNMrAAAAAJAo1DVqav4X530XTHUje1XbFuUm"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - uploads:/app/uploads
+    # ports:
+    #   - "8081:8081"
+
+  frontend:
+    build: ./projectreact
+    restart: always
+    ports:
+      - "80:80"  # 브라우저 접속: http://<호스트IP>
+    depends_on:
+      - backend
+
+volumes:
+  db_data:
+  uploads:
